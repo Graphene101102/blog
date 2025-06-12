@@ -1,0 +1,30 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "blog"
+  ],
+  "homepage": "https://github.com/Graphene101102/blog#readme",
+  "bugs": {
+    "url": "https://github.com/Graphene101102/blog/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Graphene101102/blog.git"
+  },
+  "license": "ISC",
+  "author": "viet",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
