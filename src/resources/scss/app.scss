@@ -1,0 +1,13 @@
+@import './_variables.scss';
+
+.app {
+    .header {
+       color: $header-color;
+    }
+    .footer {
+        color: $footer-color;
+    }
+    .home {
+        color: $home-color;
+    }
+}
