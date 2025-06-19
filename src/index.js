@@ -2,7 +2,14 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+
+const db = require('./config/db');
 const route = require('./routes/index.route');
+
+// Connect to MongoDB 
+db.connect();
+
+// Init app
 const app = express();
 const port = 3000;
 
