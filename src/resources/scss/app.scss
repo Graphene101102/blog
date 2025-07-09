@@ -11,3 +11,13 @@
         color: $home-color;
     }
 }
+
+.card-course-item {
+    margin-top: 16px;
+    margin-right: 16px;
+    width: 18rem;
+    img {
+        width: 100%;
+        height: 18rem;
+    }
+}

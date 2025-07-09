@@ -8,4 +8,14 @@
   color: yellow;
 }
 
+.card-course-item {
+  margin-top: 16px;
+  margin-right: 16px;
+  width: 18rem;
+}
+.card-course-item img {
+  width: 100%;
+  height: 18rem;
+}
+
 /*# sourceMappingURL=app.css.map */
