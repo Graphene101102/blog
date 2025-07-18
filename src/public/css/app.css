@@ -1,5 +1,11 @@
 .app .header {
   color: red;
+  min-height: fit-content;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.app .header .logo-nav {
+  font-size: 2rem;
 }
 .app .footer {
   color: green;
@@ -8,14 +14,21 @@
   color: yellow;
 }
 
+.container {
+  max-width: 85% !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+}
+
 .card-course-item {
   margin-top: 16px;
-  margin-right: 16px;
-  width: 18rem;
 }
-.card-course-item img {
-  width: 100%;
-  height: 18rem;
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 4px;
 }
 
 /*# sourceMappingURL=app.css.map */
