@@ -1,5 +1,6 @@
 const Course = require("../models/Course");
 const { mongooseToObject } = require("../../util/mongoose");
+const slugify = require('slugify');
 
 class CourseController {
     // [GET] /courses/:slug
@@ -21,6 +22,7 @@ class CourseController {
     store(req, res, next) {
         const formData = req.body;
         formData.image = `https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
+        formData.slug = slugify(formData.name, { lower: true, strict: true });
         const course = new Course(req.body);
         course.save()
             .then(() => res.redirect('/'))
@@ -42,8 +44,16 @@ class CourseController {
     update(req, res, next) {
 
         req.body.image = `https://img.youtube.com/vi/${req.body.videoId}/sddefault.jpg`;
+        req.body.slug = slugify(req.body.name, { lower: true, strict: true });
 
         Course.updateOne({ _id: req.params.id }, req.body)
+            .then(() => res.redirect('/me/courses'))
+            .catch(next)
+    }
+
+    //[DELETE] /courses/:id/delete
+    delete(req, res, next) {
+        Course.deleteOne({ _id: req.params.id })
             .then(() => res.redirect('/me/courses'))
             .catch(next)
     }
