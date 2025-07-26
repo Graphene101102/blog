@@ -1,9 +1,7 @@
 <div class="mt-4">
-    <div>
-         <h3>Khóa học của tôi</h3>
-         <a href="/me/courses/trash">Thùng rác</a>
-    </div>
-   
+
+    <h3>Thùng rác</h3>
+
     <table class="table table-striped mt-4">
         <thead>
             <tr>
@@ -22,20 +20,16 @@
                 <td>{{this.videoId}}</td>
                 <td>{{this.createAt}}</td>
                 <td>
-                    <a href="/courses/{{this._id}}/edit" class="btn btn-link">Sửa</a>
-                    {{!--
-                </td>
-                <td> --}}
-                    <a class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
-                        data-target="#deleteModal">Xóa</a>
+                    <a class="btn btn-link btn-restore" data-id="{{this._id}}">Khôi phục</a>
+                    <a class="btn btn-link" data-toggle="modal" data-id="{{this._id}}" data-target="#deleteModal">Xóa
+                        vĩnh viễn</a>
                 </td>
             </tr>
 
             {{else}}
             <tr>
                 <td colspan="5" class="text-center">
-                    Bạn không có khóa học nào.   
-                    <a href="/courses/create">Đăng khóa học</a>
+                    Thùng rác trống.
                 </td>
             </tr>
 
@@ -55,7 +49,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Bạn chắc chắn muốn xóa khóa học này?
+                Bạn chắc chắn muốn xóa vĩnh viễn khóa học này?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
@@ -64,6 +58,8 @@
         </div>
     </div>
 </div>
+
+<form name="restore-course" method="post"></form>
 <form name="delete-course" method="post"></form>
 
 <script>
@@ -72,6 +68,10 @@
         var btnDeleteCourse = document.getElementById('btn-delete-course');
         var formDelete = document.forms['delete-course']
 
+        var restoreBtn = $('.btn-restore');
+        var formRestore = document.forms['restore-course']
+
+
         $('#deleteModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             courseId = button.data('id');
@@ -79,8 +79,17 @@
 
 
         btnDeleteCourse.onclick = function () {
-            formDelete.action = '/courses/' + courseId + '?_method=DELETE';
+            formDelete.action = '/courses/' + courseId + '/force?_method=DELETE';
             formDelete.submit();
         }
+
+        restoreBtn.click(function (e) {
+            e.preventDefault();
+
+            var courseId = $(this).data('id');
+            formRestore.action = '/courses/' + courseId + '/restore?_method=PATCH';
+            formRestore.submit();
+        })
+
     })
 </script>

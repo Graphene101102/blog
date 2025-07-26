@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
 
 const Schema = mongoose.Schema;
 
@@ -10,6 +11,11 @@ const Course = new Schema({
     videoId: {type: String, required: true},
 },{
     timestamps: true,
+});
+
+Course.plugin(mongooseDelete,  { 
+    overrideMethods: 'all' ,
+    deletedAt : true,
 });
 
 module.exports = mongoose.model('Course', Course);
