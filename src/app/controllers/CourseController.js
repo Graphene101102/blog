@@ -65,13 +65,48 @@ class CourseController {
             .catch(next)
     }
 
-    
+
     //[DELETE] /courses/:id/force
     destroy(req, res, next) {
         Course.deleteOne({ _id: req.params.id })
             .then(() => res.redirect('/me/courses'))
             .catch(next)
     }
+
+    //[POST] /courses/handle-action-form
+    handleFormAction(req, res, next) {
+        switch (req.body.action) {
+            case 'delete':
+                Course.delete({ _id: { $in: req.body.courseId } })
+                    .then(() => res.redirect('/me/courses'))
+                    .catch(next)
+                break;
+
+            default:
+                res.json({ message: 'Action is null!!!' })
+                break;
+        }
+    }
+
+    //[POST] /courses/handle-action-trash-form
+    handleFormActionTrash(req, res, next) {
+        switch (req.body.action) {
+            case 'restore':
+                Course.restore({ _id: {$in: req.body.courseId}})
+                    .then(() => res.redirect('/me/courses/trash'))
+                    .catch(next)
+                break;
+            case 'delete':
+                Course.deleteMany({ _id: { $in: req.body.courseId } })
+                    .then(() => res.redirect('/me/courses'))
+                    .catch(next)
+                break;
+            default:
+                res.json({ message: 'Action is null!!!' })
+                break;
+        }
+    }
+
 }
 
 module.exports = new CourseController();
