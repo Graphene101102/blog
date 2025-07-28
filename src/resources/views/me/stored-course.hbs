@@ -27,9 +27,18 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">#</th>
-                <th scope="col">Tên khóa học</th>
-                <th scope="col">Video ID</th>
-                <th scope="col">Thời gian tạo</th>
+                <th scope="col">
+                    Tên khóa học
+                    {{{sortable 'name' _sort}}}
+                </th>
+                <th scope="col">
+                    Video ID
+                    {{{sortable 'videoId' _sort}}}
+                </th>
+                <th scope="col">
+                    Thời gian tạo
+                    {{{sortable 'createdAt' _sort}}}
+                </th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -44,7 +53,7 @@
                 <th scope="row">{{sum @index 1}}</th>
                 <td>{{this.name}}</td>
                 <td>{{this.videoId}}</td>
-                <td>{{this.createAt}}</td>
+                <td>{{this.createdAt}}</td>
                 <td>
                     <a href="/courses/{{this._id}}/edit" class="btn btn-link">Sửa</a>
                     {{!--

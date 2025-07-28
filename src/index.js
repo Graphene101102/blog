@@ -6,6 +6,7 @@ const handlebars = require('express-handlebars');
 
 const db = require('./config/db');
 const route = require('./routes/index.route');
+const SortMiddleWare = require('./app/middlewares/SortMiddleWare')
 
 // Connect to MongoDB 
 db.connect();
@@ -28,6 +29,9 @@ app.use(express.json());
 
 app.use(methodOverride('_method'))
 
+//MiddleWare
+app.use(SortMiddleWare);
+
 // HTTP logger
 // Middleware để ghi log các HTTP request, giúp debug trong quá trình phát triển
 app.use(morgan('combined'));
@@ -37,10 +41,33 @@ app.engine('hbs', handlebars.engine({
   extname: '.hbs',
   helpers: {
     sum: (a, b) => a + b,
+    sortable: (field, sort) => {
+
+      const sortType = field === sort.column ? sort.type : 'default';
+
+      const icons = {
+        default: 'oi oi-elevator',
+        asc: 'oi oi-sort-ascending',
+        desc: 'oi oi-sort-descending'
+      };
+      const icon = icons[sortType];
+
+      const types = {
+        default: 'desc',
+        asc: 'desc',
+        desc: 'asc'
+      }
+      const type = types[sortType];
+
+      return `<a href="?_sort&column=${field}&type=${type}">
+        <span class="${icon}"></>
+      </a>`;
+
+    }
   }
 }));
 app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, 'resources','views'));
+app.set('views', path.join(__dirname, 'resources', 'views'));
 
 // Routes init
 route(app);
