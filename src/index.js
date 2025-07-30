@@ -6,7 +6,7 @@ const handlebars = require('express-handlebars');
 
 const db = require('./config/db');
 const route = require('./routes/index.route');
-const sortMiddleWare = require('./app/middlewares/sortMiddleWare.x')
+const sortMiddleWare = require('./app/middlewares/sortMiddleWare');
 
 // Connect to MongoDB 
 db.connect();
@@ -39,32 +39,7 @@ app.use(morgan('combined'));
 // Template engine
 app.engine('hbs', handlebars.engine({
   extname: '.hbs',
-  helpers: {
-    sum: (a, b) => a + b,
-    sortable: (field, sort) => {
-
-      const sortType = field === sort.column ? sort.type : 'default';
-
-      const icons = {
-        default: 'oi oi-elevator',
-        asc: 'oi oi-sort-ascending',
-        desc: 'oi oi-sort-descending'
-      };
-      const icon = icons[sortType];
-
-      const types = {
-        default: 'desc',
-        asc: 'desc',
-        desc: 'asc'
-      }
-      const type = types[sortType];
-
-      return `<a href="?_sort&column=${field}&type=${type}">
-        <span class="${icon}"></>
-      </a>`;
-
-    }
-  }
+  helpers: require('./app/helpers/handlebars')
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));

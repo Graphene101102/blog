@@ -5,14 +5,7 @@ class MeController {
     // [GET] /me/course
     course(req, res, next) {
 
-        let courseQuery = Course.find({});
-
-        if ('_sort' in req.query) {
-            courseQuery
-                .sort({ [req.query.column]: req.query.type })
-        }
-
-        courseQuery
+        Course.find({}).sortable(req)
             .then(courses => res.render('me/stored-course', {
                 courses: multipleMongooseToObject(courses)
             }))
