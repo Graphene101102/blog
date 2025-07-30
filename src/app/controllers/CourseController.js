@@ -23,12 +23,11 @@ class CourseController {
         const formData = req.body;
         formData.image = `https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
         formData.slug = slugify(formData.name, { lower: true, strict: true });
+
         const course = new Course(req.body);
         course.save()
             .then(() => res.redirect('/'))
-            .catch(error => {
-
-            })
+            .catch(next);
     }
 
     // [GET] /courses/:id/edit
@@ -92,7 +91,7 @@ class CourseController {
     handleFormActionTrash(req, res, next) {
         switch (req.body.action) {
             case 'restore':
-                Course.restore({ _id: {$in: req.body.courseId}})
+                Course.restore({ _id: { $in: req.body.courseId } })
                     .then(() => res.redirect('/me/courses/trash'))
                     .catch(next)
                 break;
