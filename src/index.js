@@ -6,7 +6,7 @@ const handlebars = require('express-handlebars');
 
 const db = require('./config/db');
 const route = require('./routes/index.route');
-const SortMiddleWare = require('./app/middlewares/SortMiddleWare')
+const sortMiddleWare = require('./app/middlewares/sortMiddleWare.x')
 
 // Connect to MongoDB 
 db.connect();
@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(methodOverride('_method'))
 
 //MiddleWare
-app.use(SortMiddleWare);
+app.use(sortMiddleWare);
 
 // HTTP logger
 // Middleware để ghi log các HTTP request, giúp debug trong quá trình phát triển
