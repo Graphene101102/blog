@@ -1,0 +1,208 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <i class="oi oi-person me-2"></i>
+                        Đăng ký tài khoản
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/auth/register" method="POST" id="registerForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">
+                                    <i class="oi oi-person me-2"></i>
+                                    Họ và tên đệm
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="firstName" 
+                                    name="firstName" 
+                                    placeholder="Nhập họ và tên đệm"
+                                    required
+                                >
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">
+                                    <i class="oi oi-person me-2"></i>
+                                    Tên
+                                </label>
+                                <input 
+                                    type="text" 
+                                    class="form-control" 
+                                    id="lastName" 
+                                    name="lastName" 
+                                    placeholder="Nhập tên"
+                                    required
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="oi oi-envelope-closed me-2"></i>
+                                Email
+                            </label>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                id="email" 
+                                name="email" 
+                                placeholder="Nhập email của bạn"
+                                required
+                            >
+                            <div class="form-text">
+                                Email sẽ được sử dụng để đăng nhập vào hệ thống
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">
+                                <i class="oi oi-phone me-2"></i>
+                                Số điện thoại
+                            </label>
+                            <input 
+                                type="tel" 
+                                class="form-control" 
+                                id="phone" 
+                                name="phone" 
+                                placeholder="Nhập số điện thoại"
+                                pattern="[0-9]{10,11}"
+                            >
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="oi oi-lock-locked me-2"></i>
+                                Mật khẩu
+                            </label>
+                            <div class="input-group">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Nhập mật khẩu"
+                                    required
+                                    minlength="6"
+                                >
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button" 
+                                    id="togglePassword"
+                                >
+                                    <i class="oi oi-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                Mật khẩu phải có ít nhất 6 ký tự
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">
+                                <i class="oi oi-lock-locked me-2"></i>
+                                Xác nhận mật khẩu
+                            </label>
+                            <div class="input-group">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="confirmPassword" 
+                                    name="confirmPassword" 
+                                    placeholder="Nhập lại mật khẩu"
+                                    required
+                                >
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button" 
+                                    id="toggleConfirmPassword"
+                                >
+                                    <i class="oi oi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms" name="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                Tôi đồng ý với <a href="/terms" class="text-decoration-none">điều khoản sử dụng</a> và 
+                                <a href="/privacy" class="text-decoration-none">chính sách bảo mật</a>
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="oi oi-person me-2"></i>
+                                Đăng ký
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Đã có tài khoản?</p>
+                        <a href="/auth/login" class="btn btn-outline-primary">
+                            <i class="oi oi-account-login me-2"></i>
+                            Đăng nhập ngay
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle password visibility
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        const icon = this.querySelector('i');
+        icon.classList.toggle('oi-eye');
+        icon.classList.toggle('oi-eye-slash');
+    });
+    
+    // Toggle confirm password visibility
+    const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+    const confirmPassword = document.getElementById('confirmPassword');
+    
+    toggleConfirmPassword.addEventListener('click', function() {
+        const type = confirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+        confirmPassword.setAttribute('type', type);
+        
+        const icon = this.querySelector('i');
+        icon.classList.toggle('oi-eye');
+        icon.classList.toggle('oi-eye-slash');
+    });
+    
+    // Form validation
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        if (password !== confirmPassword) {
+            e.preventDefault();
+            alert('Mật khẩu xác nhận không khớp!');
+            return false;
+        }
+        
+        if (password.length < 6) {
+            e.preventDefault();
+            alert('Mật khẩu phải có ít nhất 6 ký tự!');
+            return false;
+        }
+    });
+});
+</script> 

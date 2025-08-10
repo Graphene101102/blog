@@ -7,21 +7,32 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-          <img src="https://cafefcdn.com/zoom/700_438/203337114487263232/2022/3/3/photo1646280815645-1646280816151764748403.jpg" alt="" class="user-avatar">
-          Hoang Viet
-        </a>
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="/courses/create">Đăng ký khóa học</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/me/courses">Khóa học của tôi</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/me/news">Bài đăng của tôi</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/">Đăng suất</a>
-        </div>
-      </li>
+      {{#if isAuthenticated}}
+        <!-- User đã đăng nhập -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+            <img src="https://cafefcdn.com/zoom/700_438/203337114487263232/2022/3/3/photo1646280815645-1646280816151764748403.jpg" alt="" class="user-avatar">
+            {{user.lastname}}
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="/courses/create">Đăng ký khóa học</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/courses">Khóa học của tôi</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/me/news">Bài đăng của tôi</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/auth/logout">Đăng xuất</a>
+          </div>
+        </li>
+      {{else}}
+        <!-- User chưa đăng nhập -->
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/login">Đăng nhập</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/register">Đăng ký</a>
+        </li>
+      {{/if}}
     </ul>
   </div>
  </div>

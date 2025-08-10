@@ -1,19 +1,24 @@
+// Load environment variables
+require('dotenv').config();
+
 const path = require('path');
 const express = require('express');
 const methodOverride = require('method-override');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
+const session = require('express-session');
 
 const db = require('./config/db');
 const route = require('./routes/index.route');
 const sortMiddleWare = require('./app/middlewares/sortMiddleWare');
+const { checkAuth } = require('./app/middlewares/authMiddleware');
 
 // Connect to MongoDB 
 db.connect();
 
 // Init app
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Static file
 // Phục vụ các file tĩnh (static files) như hình ảnh, CSS, JavaScript từ thư mục 'public'
@@ -27,7 +32,21 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware để xử lý dữ liệu JSON từ request body
 app.use(express.json());
 
+// Session middleware
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'fallback-secret-key-for-development',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
 app.use(methodOverride('_method'))
+
+// Authentication middleware - kiểm tra trạng thái đăng nhập cho tất cả routes
+app.use(checkAuth);
 
 //MiddleWare
 app.use(sortMiddleWare);

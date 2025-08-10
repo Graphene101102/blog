@@ -1,0 +1,103 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <i class="oi oi-account-login me-2"></i>
+                        Đăng nhập
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form action="/auth/login" method="POST">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <i class="oi oi-envelope-closed me-2"></i>
+                                Email
+                            </label>
+                            <input 
+                                type="email" 
+                                class="form-control" 
+                                id="email" 
+                                name="email" 
+                                placeholder="Nhập email của bạn"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="oi oi-lock-locked me-2"></i>
+                                Mật khẩu
+                            </label>
+                            <div class="input-group">
+                                <input 
+                                    type="password" 
+                                    class="form-control" 
+                                    id="password" 
+                                    name="password" 
+                                    placeholder="Nhập mật khẩu"
+                                    required
+                                >
+                                <button 
+                                    class="btn btn-outline-secondary" 
+                                    type="button" 
+                                    id="togglePassword"
+                                >
+                                    <i class="oi oi-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">
+                                Ghi nhớ đăng nhập
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="oi oi-account-login me-2"></i>
+                                Đăng nhập
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="mb-2">Chưa có tài khoản?</p>
+                        <a href="/auth/register" class="btn btn-outline-success">
+                            <i class="oi oi-person me-2"></i>
+                            Đăng ký ngay
+                        </a>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="/auth/forgot-password" class="text-decoration-none">
+                            <i class="oi oi-question-mark me-1"></i>
+                            Quên mật khẩu?
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    
+    togglePassword.addEventListener('click', function() {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        
+        const icon = this.querySelector('i');
+        icon.classList.toggle('oi-eye');
+        icon.classList.toggle('oi-eye-slash');
+    });
+});
+</script> 

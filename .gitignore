@@ -1,2 +1,5 @@
 node_modules/
-src/public/css 
+src/public/css
+.env
+.env.local
+.env.*.local 
