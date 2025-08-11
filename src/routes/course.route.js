@@ -1,9 +1,10 @@
 const express = require('express');
 const CourseController = require('../app/controllers/CourseController');
+const { requireAuth } = require('../app/middlewares/authMiddleware');
 const router = express.Router();
 
-router.get('/create', CourseController.create);
-router.post('/store', CourseController.store);
+router.get('/create', requireAuth, CourseController.create);
+router.post('/store', requireAuth, CourseController.store);
 router.post('/handle-action-form', CourseController.handleFormAction)
 router.post('/handle-action-trash-form', CourseController.handleFormActionTrash)
 router.get('/:id/edit', CourseController.edit);

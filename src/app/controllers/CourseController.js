@@ -23,8 +23,14 @@ class CourseController {
         const formData = req.body;
         formData.image = `https://img.youtube.com/vi/${formData.videoId}/sddefault.jpg`;
         formData.slug = slugify(formData.name, { lower: true, strict: true });
+        // attach creator from session
+        if (req.session && (req.session.user && req.session.user.id)) {
+            formData.createdBy = req.session.user.id;
+        } else if (req.session && req.session.userId) {
+            formData.createdBy = req.session.userId;
+        }
 
-        const course = new Course(req.body);
+        const course = new Course(formData);
         course.save()
             .then(() => res.redirect('/'))
             .catch(next);

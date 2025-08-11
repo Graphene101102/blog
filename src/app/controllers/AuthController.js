@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Course = require('../models/Course');
+const { multipleMongooseToObject } = require('../../util/mongoose');
 
 class AuthController {
 
@@ -7,12 +9,28 @@ class AuthController {
         res.render('auth/login');
     }
 
+    // [GET] /auth/profile
+    async profile(req, res, next) {
+        try {
+            if (!req.session || !(req.session.user || req.session.userId)) {
+                return res.redirect('/auth/login');
+            }
+            const userId = (req.session.user && req.session.user.id) || req.session.userId;
+            const courses = await Course.find({ createdBy: userId }).sort({ updatedAt: -1 });
+            return res.render('auth/profile', {
+                courses: multipleMongooseToObject(courses)
+            });
+        } catch (error) {
+            console.error('Profile error:', error);
+            return res.status(500).send('Có lỗi xảy ra');
+        }
+    }
+
     //[POST] /auth/loggedin
     async loggedin(req, res, next) {
         try {
             const { email, password, remember } = req.body;
 
-            // Validation
             if (!email || !password) {
                 return res.status(400).json({
                     success: false,
@@ -20,9 +38,8 @@ class AuthController {
                 });
             }
 
-            // Tìm user theo email (bao gồm password để so sánh)
             const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
-
+            
             if (!user) {
                 return res.status(401).json({
                     success: false,
@@ -30,7 +47,6 @@ class AuthController {
                 });
             }
 
-            // So sánh mật khẩu
             const isPasswordValid = await user.comparePassword(password);
             if (!isPasswordValid) {
                 return res.status(401).json({
@@ -39,23 +55,33 @@ class AuthController {
                 });
             }
 
-            // Tạo session cho user
-            req.session.userId = user._id;
-            req.session.userRole = user.role;
-            req.session.userEmail = user.email;
+            // Build lightweight user object to store in session
+            const loggedInUser = {
+                id: user._id.toString(),
+                email: user.email,
+                role: user.role,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                avatar: user.avatar || null,
+            };
 
-            // Nếu chọn "remember me", tăng thời gian session
+            // Store user info in session
+            req.session.user = loggedInUser;
+            // Backward-compatible individual fields
+            req.session.userId = loggedInUser.id;
+            req.session.userRole = loggedInUser.role;
+            req.session.userEmail = loggedInUser.email;
+
             if (remember) {
                 req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 ngày
             }
 
-            // Chuyển hướng về trang chủ sau khi đăng nhập thành công
-            res.redirect('/');
-
+            // Redirect after successful login
+            return res.redirect('/');
         } catch (error) {
             console.error('Login error:', error);
-
-            res.status(500).json({
+            
+            return res.status(500).json({
                 success: false,
                 message: 'Có lỗi xảy ra, vui lòng thử lại sau'
             });
@@ -144,7 +170,7 @@ class AuthController {
 
         } catch (error) {
             console.error('Registration error:', error);
-
+            
             // Xử lý lỗi validation của Mongoose
             if (error.name === 'ValidationError') {
                 const validationErrors = Object.values(error.errors).map(err => err.message);
@@ -181,8 +207,7 @@ class AuthController {
                     message: 'Có lỗi xảy ra khi đăng xuất'
                 });
             }
-
-            // Chuyển hướng về trang chủ
+            // Chuyển hướng về trang đăng nhập
             res.redirect('/auth/login');
         });
     }

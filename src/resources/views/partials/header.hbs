@@ -11,15 +11,19 @@
         <!-- User đã đăng nhập -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-            <img src="https://cafefcdn.com/zoom/700_438/203337114487263232/2022/3/3/photo1646280815645-1646280816151764748403.jpg" alt="" class="user-avatar">
-            {{user.lastname}}
+            <img src="{{#if user.avatar}}{{user.avatar}}{{else}}src\public\img\logo.png{{/if}}" alt="" class="user-avatar">
+            {{#if user.lastName}}{{user.lastName}}{{else}}###{{/if}}
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/courses/create">Đăng ký khóa học</a>
+            <a class="dropdown-item" href="/auth/profile">Tài khoản</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="">Cài đặt</a>
+            <div class="dropdown-divider"></div>
+            {{!-- <a class="dropdown-item" href="/courses/create">Đăng ký khóa học</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/me/courses">Khóa học của tôi</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="/me/news">Bài đăng của tôi</a>
+            <a class="dropdown-item" href="/me/news">Bài đăng của tôi</a> --}}
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/auth/logout">Đăng xuất</a>
           </div>
