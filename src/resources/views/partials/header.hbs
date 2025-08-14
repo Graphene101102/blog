@@ -11,13 +11,13 @@
         <!-- User đã đăng nhập -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-            <img src="{{#if user.avatar}}{{user.avatar}}{{else}}src\public\img\logo.png{{/if}}" alt="" class="user-avatar">
-            {{#if user.lastName}}{{user.lastName}}{{else}}###{{/if}}
+            <img src="{{#if (safeGet user 'avatar')}}{{safeGet user 'avatar'}}{{else}}/img/logo.png{{/if}}" alt="" class="user-avatar">
+            {{#if (safeGet user 'firstName')}}{{safeGet user 'firstName'}} {{/if}}{{safeGet user 'lastName'}}
           </a>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="/auth/profile">Tài khoản</a>
+            <a class="dropdown-item" href="/auth/profile/{{safeGet user 'id'}}">Tài khoản</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="">Cài đặt</a>
+            <a class="dropdown-item" href="/auth/settings">Cài đặt</a>
             <div class="dropdown-divider"></div>
             {{!-- <a class="dropdown-item" href="/courses/create">Đăng ký khóa học</a>
             <div class="dropdown-divider"></div>

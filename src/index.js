@@ -25,6 +25,7 @@ const port = process.env.PORT || 3000;
 // Cho phép truy cập trực tiếp các file trong thư mục public thông qua URL
 // Ví dụ: http://localhost:3000/images/logo.png sẽ trả về file logo.png trong thư mục public/images
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 // Parse request to json
 // Middleware để xử lý dữ liệu từ form HTML (application/x-www-form-urlencoded)
@@ -39,8 +40,11 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         secure: process.env.NODE_ENV === 'production', // Set to true if using HTTPS
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+        httpOnly: true,
+        sameSite: 'lax'
+    },
+    name: 'sessionId' // Custom session name
 }));
 
 app.use(methodOverride('_method'))

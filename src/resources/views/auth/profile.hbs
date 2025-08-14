@@ -1,27 +1,29 @@
 <div class="container py-4">
   {{#if isAuthenticated}}
   <div class="card shadow-sm mb-4 position-relative">
+    {{#if isProfileOwner}}
     <a href="/auth/settings" class="btn btn-light border position-absolute" style="top: 12px; right: 12px;">
       <i class="oi oi-cog"></i>
     </a>
+    {{/if}}
     <div class="card-body">
       <div class="d-flex align-items-center">
-        <img src="{{#if user.avatar}}{{user.avatar}}{{else}}/img/logo.png{{/if}}" alt="avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
+        <img src="{{#if (safeGet userProfile 'avatar')}}{{safeGet userProfile 'avatar'}}{{else}}/img/logo.png{{/if}}" alt="avatar" class="rounded-circle me-3" style="width: 80px; height: 80px; object-fit: cover;">
         <div class="flex-grow-1">
-          <h4 class="mb-1">{{#if user.firstName}}{{user.firstName}} {{/if}}{{user.lastName}}</h4>
+          <h4 class="mb-1">{{#if (safeGet userProfile 'firstName')}}{{safeGet userProfile 'firstName'}} {{/if}}{{safeGet userProfile 'lastName'}}</h4>
           <div class="d-flex align-items-center gap-2 text-muted small">
-            <span><i class="oi oi-person me-1"></i>{{user.email}}</span>
-            {{#if user.role}}
+            <span><i class="oi oi-person me-1"></i>{{safeGet userProfile 'email'}}</span>
+            {{#if (safeGet userProfile 'role')}}
               <span class="mx-2">•</span>
-              <span class="badge bg-primary text-uppercase">{{user.role}}</span>
+              <span class="badge bg-primary text-uppercase">{{safeGet userProfile 'role'}}</span>
             {{/if}}
           </div>
         </div>
       </div>
 
-      {{#if user.bio}}
+      {{#if (safeGet userProfile 'bio')}}
       <div class="mt-3">
-        <p class="mb-0">{{user.bio}}</p>
+        <p class="mb-0">{{safeGet userProfile 'bio'}}</p>
       </div>
       {{/if}}
 
@@ -35,18 +37,18 @@
         <div class="col-6 col-md-3">
           <div class="p-2 border rounded">
             <div class="small text-muted">Email</div>
-            <div class="fw-semibold text-truncate">{{user.email}}</div>
+            <div class="fw-semibold text-truncate">{{safeGet userProfile 'email'}}</div>
           </div>
         </div>
-        {{#if user.phone}}
+        {{#if (safeGet userProfile 'phone')}}
         <div class="col-6 col-md-3">
           <div class="p-2 border rounded">
             <div class="small text-muted">SĐT</div>
-            <div class="fw-semibold">{{user.phone}}</div>
+            <div class="fw-semibold">{{safeGet userProfile 'phone'}}</div>
           </div>
         </div>
         {{/if}}
-        {{#if user.isEmailVerified}}
+        {{#if (safeGet userProfile 'isEmailVerified')}}
         <div class="col-6 col-md-3">
           <div class="p-2 border rounded">
             <div class="small text-muted">Trạng thái</div>

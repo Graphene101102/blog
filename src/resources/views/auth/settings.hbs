@@ -1,0 +1,329 @@
+{{!-- Chỉnh sửa thông tin tài khoản --}}
+<div class="container settings-container">
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h1 class="h3 text-dark">Cài đặt tài khoản</h1>
+        <p class="text-muted">Chỉnh sửa thông tin cá nhân và bảo mật</p>
+    </div>
+
+    {{#if messages.success}}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            {{messages.success}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {{/if}}
+
+    {{#if messages.error}}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            {{messages.error}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {{/if}}
+
+    <!-- Cập nhật Avatar -->
+    <div class="card settings-card mb-4">
+        <div class="card-header settings-header">
+            <h5 class="mb-0">
+                <i class="fas fa-camera me-2"></i>
+                Ảnh đại diện
+            </h5>
+        </div>
+        <div class="card-body">
+            <form action="/auth/settings/update-avatar" method="POST" enctype="multipart/form-data" id="avatarForm">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="position-relative d-inline-block">
+                            <img src="{{#if (safeGet user 'avatar')}}{{safeGet user 'avatar'}}{{else}}/img/default-avatar.png{{/if}}" 
+                                 alt="Avatar" class="avatar-preview mb-2" id="avatarPreview" 
+                                 onclick="document.getElementById('avatar').click()" style="cursor: pointer;">
+                            <input type="file" id="avatar" name="avatar" accept="image/*" class="d-none" onchange="previewAvatar(this)">
+                        </div>
+                        <small class="text-muted d-block">Click vào ảnh để thay đổi</small>
+                        <div class="mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm" id="updateAvatarBtn" disabled>
+                                <i class="fas fa-upload me-1"></i>
+                                Cập nhật ảnh
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="alert alert-info">
+                            <h6><i class="fas fa-info-circle me-2"></i>Hướng dẫn:</h6>
+                            <ul class="mb-0 small">
+                                <li>Chọn ảnh có kích thước tối thiểu 200x200px</li>
+                                <li>Định dạng: JPG, PNG, GIF</li>
+                                <li>Kích thước tối đa: 5MB</li>
+                                <li>Ảnh sẽ được tự động resize về kích thước phù hợp</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thông tin cá nhân -->
+    <div class="card settings-card mb-4">
+        <div class="card-header settings-header">
+            <h5 class="mb-0">
+                <i class="fas fa-user-edit me-2"></i>
+                Thông tin cá nhân
+            </h5>
+        </div>
+        <div class="card-body">
+            <form action="/auth/settings/update-profile" method="POST" id="profileForm">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">Họ và tên đệm <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" 
+                               value="{{safeGet user 'firstName'}}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="lastName" class="form-label">Tên <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" 
+                               value="{{safeGet user 'lastName'}}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input type="email" class="form-control" id="email" name="email" 
+                               value="{{safeGet user 'email'}}" required readonly>
+                        <small class="text-muted">Email không thể thay đổi</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phone" class="form-label">Số điện thoại</label>
+                        <input type="tel" class="form-control" id="phone" name="phone" 
+                               value="{{safeGet user 'phone'}}">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Giới thiệu</label>
+                    <textarea class="form-control" id="bio" name="bio" rows="3" 
+                              placeholder="Viết gì đó về bản thân...">{{safeGet user 'bio'}}</textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Đổi mật khẩu -->
+    <div class="card settings-card mb-4">
+        <div class="card-header settings-header">
+            <h5 class="mb-0">
+                <i class="fas fa-lock me-2"></i>
+                Đổi mật khẩu
+            </h5>
+        </div>
+        <div class="card-body">
+            <form action="/auth/settings/change-password" method="POST" id="changePasswordForm">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('currentPassword')"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới <span class="text-danger">*</span></label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" 
+                                   minlength="8" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('newPassword')"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                        <div class="position-relative">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                                   minlength="8" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword')"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="mt-4 pt-2">
+                            <div class="password-strength" id="passwordStrength"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-key me-2"></i>
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quay lại -->
+    <div class="text-center">
+        <a href="/auth/profile" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>
+            Quay lại trang cá nhân
+        </a>
+    </div>
+</div>
+
+<script>
+    // Preview avatar
+    function previewAvatar(input) {
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            
+            // Kiểm tra kích thước file (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File quá lớn! Vui lòng chọn file nhỏ hơn 5MB.');
+                input.value = '';
+                return;
+            }
+
+            // Kiểm tra định dạng file
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                alert('Chỉ chấp nhận file JPG, PNG, GIF!');
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+                // Enable nút cập nhật avatar
+                document.getElementById('updateAvatarBtn').disabled = false;
+                
+                // Hiển thị thông báo đã chọn ảnh
+                showNotification('Đã chọn ảnh: ' + file.name, 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Hiển thị thông báo
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'} me-2"></i>
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 3000);
+    }
+
+    // Toggle password visibility
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = input.nextElementSibling;
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+    // Password strength checker
+    document.getElementById('newPassword').addEventListener('input', function() {
+        const password = this.value;
+        const strengthDiv = document.getElementById('passwordStrength');
+        let strength = 0;
+        let message = '';
+        let color = '';
+
+        if (password.length >= 8) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+        switch(strength) {
+            case 0:
+            case 1:
+                message = 'Rất yếu';
+                color = 'text-danger';
+                break;
+            case 2:
+                message = 'Yếu';
+                color = 'text-warning';
+                break;
+            case 3:
+                message = 'Trung bình';
+                color = 'text-info';
+                break;
+            case 4:
+                message = 'Mạnh';
+                color = 'text-primary';
+                break;
+            case 5:
+                message = 'Rất mạnh';
+                color = 'text-success';
+                break;
+        }
+
+        strengthDiv.innerHTML = `<small class="${color}"><i class="fas fa-shield-alt me-1"></i>${message}</small>`;
+    });
+
+    // Form validation cho profile
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+
+        if (!firstName || !lastName) {
+            e.preventDefault();
+            alert('Họ và tên không được để trống!');
+            return false;
+        }
+    });
+
+    // Form validation cho password
+    document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            e.preventDefault();
+            alert('Mật khẩu xác nhận không khớp!');
+            return false;
+        }
+    });
+
+    // Xử lý cập nhật avatar
+    document.getElementById('avatarForm').addEventListener('submit', function(e) {
+        const avatarInput = document.getElementById('avatar');
+        
+        if (!avatarInput.files || !avatarInput.files[0]) {
+            e.preventDefault();
+            alert('Vui lòng chọn ảnh để cập nhật!');
+            return false;
+        }
+
+        // Hiển thị loading
+        const updateBtn = document.getElementById('updateAvatarBtn');
+        updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Đang cập nhật...';
+        updateBtn.disabled = true;
+    });
+</script> 
